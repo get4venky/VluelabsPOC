@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" 
+	  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+	<head>	
+	  <meta charset="utf-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	  <meta name="description" content="" />
+	  <meta name="author" content="" />
+	
+	  <title>Value labs POC</title>
+	
+	  <!-- Bootstrap core CSS -->
+	  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	  
+	  <!-- Bootstrap Date picker -->
+	  <link href="vendor/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+	
+	  <!-- Custom styles for this template -->
+	  <link href="css/scrolling-nav.css" rel="stylesheet" />
+	
+	</head>
+	
+	<body id="page-top">
+	
+	  <!-- Navigation -->
+	  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+	    <div class="container">
+	      <a class="navbar-brand js-scroll-trigger" href="#page-top">Support Wheel Of Fate</a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"></span>
+	      </button>
+	      <div class="collapse navbar-collapse" id="navbarResponsive">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item">
+	            <a class="nav-link js-scroll-trigger" href="#schedule">Schedule</a>
+	          </li>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+	
+	  <header class="bg-primary text-white">
+	    <div class="container text-center">
+	      <h1>Welcome!</h1>
+	      <p class="lead">Value labs POC</p>
+	    </div>
+	  </header>
+	
+	  <section id="schedule">
+	    <div class="container">
+	      <div class="row">
+	        <div class="col-lg-8 mx-auto">
+	          Select Date: <input type="text" id="datepicker" /> <input type="button" id="generate" value="Ok" />
+	          
+	          <table class="table">
+	          	<thead>
+	          		<tr>
+	          			<th>Date</th>
+	          			<th>Shift 1</th>
+	          			<th>Shift 2</th>
+	          		</tr>
+	          	</thead>
+	          	<tbody id="tableBody">
+	          	</tbody>
+	          </table>
+	        </div>
+	      </div>
+	    </div>
+	  </section>
+	
+	  <!-- Footer -->
+	  <footer class="py-5 bg-dark">
+	    <div class="container">
+	      <p class="m-0 text-center text-white">Copyright &copy; Wheel Of Fate 2018</p>
+	    </div>
+	    <!-- /.container -->
+	  </footer>
+	
+	  <!-- Bootstrap core JavaScript -->
+	  <script src="vendor/jquery/jquery.min.js"></script>
+	  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	
+	  <!-- Plugin JavaScript -->
+	  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+	  
+	  <!-- Bootstrap Date picker -->
+	  <script src="vendor/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+	
+	  <!-- Custom JavaScript for this theme -->
+	  <script src="js/scrolling-nav.js"></script>
+	  
+	  <script type="text/javascript">
+	  
+	  $(document).ready(function(){
+	  	$('#datepicker').datepicker({
+	  		format: 'dd-mm-yyyy'
+	  	});
+	  	
+	  	$('#generate').click(function() {
+	  		
+	  		var data ={
+	  				'startDate': $('#datepicker').val()
+	  		}
+	  		$.ajax({
+		    	type: "POST",
+		    	enctype: 'multipart/form-data',
+		    	data: data,
+		    	url: "/schedule/generate"
+		    }).done(function(data, textStatus, jqXHR) {
+		    	console.log(data);
+		    	var tableBody = '';
+		    	$.each(data, function( index, value ) {
+    		  		var row = '<tr><td>' + value.date + '</td><td>' + value.engineers[0].name + '</td><td>' + value.engineers[1].name + '</td></tr>';
+    		  		tableBody = tableBody + row; 
+	    		});
+		    	$('#tableBody').html(tableBody);
+		    }).fail(function(data, textStatus, jqXHR) {
+		    	console.log(data.responseJSON);
+		    	alert(data.responseJSON.displayMessage);
+		    });
+	  		
+	  	})
+	  });
+	  	
+	  </script>
+	
+	</body>
+  
+</html>
+      
